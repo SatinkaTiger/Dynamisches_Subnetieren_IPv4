@@ -124,14 +124,12 @@
                 if (i < WelchesOktett)
                 {
                     UrsprünglicheSubnetzmaske += ".255";
-
                 }
                 else if (Schleife)
                 {
                     for (int j = 0; j < Restwert; j++)
                     {
                         RestwertSubnetzmaske += BitsOktett[j];
-                        Zähler++;
                     }
                     UrsprünglicheSubnetzmaske += "." + Convert.ToString(RestwertSubnetzmaske);
                     Schleife = false;
@@ -156,7 +154,7 @@
                     {
                         NeueSubnetzmaske += ".255";
                     }
-                    else if (OktettenSubnetzmaske == j)
+                    else if ((OktettenSubnetzmaske == j) && !(WelchesOktett == OktettenSubnetzmaske))
                     {
                         for (int k = 0; k < 8; k++)
                         {
@@ -167,7 +165,6 @@
                         }
                         NeueSubnetzmaske += "." + Convert.ToString(NeueSubnetzmaskeRest);
                         NeueSubnetzmaskeRest = 0;
-                        Schleife = false;
                     }
                     else if (WelchesOktett == j)
                     {
