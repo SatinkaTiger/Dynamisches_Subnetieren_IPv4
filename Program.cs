@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -12,24 +10,24 @@
     {
         static void Main(string[] args)
         {
-            int AnzahlNetzwerke;
+            int AnzahlNetzwerke; //Vriablendeklaration
             string Eingabe;
             string Temp = "";
             bool Converting;
             bool Schleife = true;
             int OktettIndex = 0;
-            ProgrammKopf();
-            Console.Write("Bitte geben Sie die Startadresse mit Präfix Ihres Netzwerks ein: ");
+            ProgrammKopf(); //Beginn der Eingabeaufforderung
+            Console.Write("Bitte geben Sie die Startadresse mit Präfix Ihres Netzwerks ein: "); 
             Eingabe = Console.ReadLine();
             Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
             Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
             Console.Clear();
-            string[] NetzwerkNamen = new string[AnzahlNetzwerke];
+            string[] NetzwerkNamen = new string[AnzahlNetzwerke]; //Arrays erzeugen anhand der Anzahl der Teilnetzwerke
             int[] AnzahlHosts = new int[AnzahlNetzwerke];
             int[] AdressOktettenPräfix = new int[5];
-            if (Converting)
+            if (Converting) //Früfung auf Richtigkeit der Eingabe der Anzahl der Teilnetzwerke
             {
-                for (int i = 0; i < AnzahlNetzwerke; i++)
+                for (int i = 0; i < AnzahlNetzwerke; i++) //Abfrage der Namen der Teilnetzwerke und deren Hostanzahl
                 {
                     ProgrammKopf();
                     Console.Write($"Bitte geben Sie den Namen Ihres {i + 1}. Teilnetzwerks ein: ");
@@ -37,7 +35,7 @@
                     Console.Write($"Bitte geben Sie die Anzahl Ihrer Hosts in {NetzwerkNamen[i]} ein: ");
                     Converting = int.TryParse(Console.ReadLine(), out AnzahlHosts[i]);
                     Console.Clear();
-                    if (!Converting)
+                    if (!Converting) //Prüfung auf Richtigkeit der Eingabe
                     {
                         Fehlerbehandlung();
                     }
@@ -47,7 +45,7 @@
             {
                 Fehlerbehandlung();
             }
-            while (Schleife)
+            while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
             {
                 for (int i = 0; i < Eingabe.Length; i++)
                 {
@@ -83,7 +81,7 @@
                 }
 
             }
-            for (int i = 0; i < AnzahlHosts.Length; i++)
+            for (int i = 0; i < AnzahlHosts.Length; i++) //Sortierung der Arrays Netzwernamen und AnzahHosts nach Hostanzahl
             {
                 for (int j = 0; j < AnzahlHosts.Length; j++)
                 {
@@ -98,12 +96,12 @@
                     }
                 }
             }
-            AnzahlNetzwerke += AnzahlNetzwerke - 1;
+            AnzahlNetzwerke += AnzahlNetzwerke - 1; //Berechnung der Verbindungsnetzwerke
             int[] BitsOktett = new int[] { 128, 64, 32, 16, 8, 4, 2 , 1,};
             int WelchesOktett;
             int Restwert;
             int[] Präfix = new int[AnzahlNetzwerke];
-            for (int i = 0; i < AnzahlNetzwerke; i++)
+            for (int i = 0; i < AnzahlNetzwerke; i++) //Berechnung des Präfix für die Netzwerke
             {
                 if (i < AnzahlHosts.Length)
                 {
@@ -115,49 +113,71 @@
                 }
             }
             int VB = 1;
-            for (int i = 0; i < AnzahlNetzwerke; i++)
+            ProgrammKopf();
+            for (int i = 0; i < AnzahlNetzwerke; i++) //Verarbeiten und Ausgeben der Daten
             {
                 WelchesOktett = Präfix[i] / 8;
                 Restwert = (Präfix[i] % 8);
-                if (i < AnzahlHosts.Length)
+                if (AdressOktettenPräfix[4] < Präfix[i])
                 {
-                    Console.WriteLine($"{NetzwerkNamen[i]} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
-                }
-                else
-                {
-                    Console.WriteLine($"VN{VB} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
-                }
-                if (Restwert == 0)
-                {
-                    AdressOktettenPräfix[WelchesOktett - 1] += 1;
-                }
-                else
-                {
-                    if ((AdressOktettenPräfix[WelchesOktett] += BitsOktett[Restwert]) >= 256)
+                    if (i < AnzahlHosts.Length)
+                    {
+                        Console.WriteLine($"{NetzwerkNamen[i]} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Verbindungsnetzwerk {VB} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
+                        VB++;
+                    }
+                    if (Restwert == 0)
                     {
                         AdressOktettenPräfix[WelchesOktett - 1] += 1;
                     }
                     else
                     {
-                        AdressOktettenPräfix[WelchesOktett] += BitsOktett[Restwert];
+                        if ((AdressOktettenPräfix[WelchesOktett] += BitsOktett[Restwert]) >= 256)
+                        {
+                            if ((AdressOktettenPräfix[WelchesOktett - 1] += +1) >= 256)
+                            {
+                                AdressOktettenPräfix[WelchesOktett - 2] += 1;
+                            }
+                            else
+                            {
+                                AdressOktettenPräfix[WelchesOktett - 1] += 1;
+                            }
+                        }
+                        else
+                        {
+                            AdressOktettenPräfix[WelchesOktett] += BitsOktett[Restwert];
+                        }
                     }
                 }
-                VB++;
+                else
+                {
+                    if (i < NetzwerkNamen.Length)
+                    {
+                        Console.WriteLine($"Das Netzwerk {NetzwerkNamen[i]} liegt außerhalb des angegebenen Netzbereiches");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Verbindungsnetzwerk {VB} liegt außerhalb des angegebenen Netzbereiches");
+                    }
+                    Fehlerbehandlung();
+                }
             }
             Console.ReadKey();
         }
-        static void Fehlerbehandlung()
+        static void Fehlerbehandlung() //Fehlerbehandlung
         {
-            ProgrammKopf();
             Console.WriteLine("Fehlerhafte Eingabe\n\nBeenden mit beliebiger Taste");
             Console.ReadKey();
             Environment.Exit(0);
         }
-        static void ProgrammKopf()
+        static void ProgrammKopf() //Progammkopf
         {
-            Console.WriteLine("Dynamisches Subnettieren in IPv4\n\nLizensiert für Whiteboxtest, nicht für den privaten und gewerblichen Gebrauch bestimmt\nAlle Rechte Rick Kummer\n\n");
+            Console.WriteLine("Dynamisches Subnettieren in IPv4\n\nopen source\n");
         }
-        static int PräfixErmitteln(int AnzahlHosts)
+        static int PräfixErmitteln(int AnzahlHosts) //Präfix Funktion
             {
             int Präfix = 0;
             bool Gefunden = false;
