@@ -10,7 +10,7 @@
     {
         static void Main(string[] args)
         {
-            int AnzahlNetzwerke; //Vriablendeklaration
+            int AnzahlNetzwerke; //Variablendeklaration
             string Eingabe;
             string Temp = "";
             bool Converting;
