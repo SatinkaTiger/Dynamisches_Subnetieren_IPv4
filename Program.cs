@@ -112,21 +112,89 @@
                     Präfix[i] = PräfixErmitteln(2);
                 }
             }
+            WelchesOktett = AdressOktettenPräfix[4] / 8;
+            Restwert = AdressOktettenPräfix[4] % 8;
+            string UrsprünglicheSubnetzmaske = "255";
+            int RestwertSubnetzmaske = 0;
+            int Zähler = 0;
+            Schleife = true;
+            int OktettenSubnetzmaske = WelchesOktett;
+            for (int i = 1; i < 4; i++)
+            {
+                if (i < WelchesOktett)
+                {
+                    UrsprünglicheSubnetzmaske += ".255";
+
+                }
+                else if (Schleife)
+                {
+                    for (int j = 0; j < Restwert; j++)
+                    {
+                        RestwertSubnetzmaske += BitsOktett[j];
+                        Zähler++;
+                    }
+                    UrsprünglicheSubnetzmaske += "." + Convert.ToString(RestwertSubnetzmaske);
+                    Schleife = false;
+                }
+                else
+                {
+                    UrsprünglicheSubnetzmaske += ".0";
+                }
+            }
             int VB = 1;
             ProgrammKopf();
+            string NeueSubnetzmaske = "255";
+            int NeueSubnetzmaskeRest = 0;
             for (int i = 0; i < AnzahlNetzwerke; i++) //Verarbeiten und Ausgeben der Daten
             {
+                Schleife = true;
                 WelchesOktett = Präfix[i] / 8;
-                Restwert = (Präfix[i] % 8);
+                Restwert = Präfix[i] % 8;
+                for (int j = 1; j < 4; j++)
+                {
+                    if (j < WelchesOktett)
+                    {
+                        NeueSubnetzmaske += ".255";
+                    }
+                    else if (OktettenSubnetzmaske == j)
+                    {
+                        for (int k = 0; k < 8; k++)
+                        {
+                            if (NeueSubnetzmaskeRest < RestwertSubnetzmaske)
+                            {
+                                NeueSubnetzmaskeRest += BitsOktett[k];
+                            }
+                        }
+                        NeueSubnetzmaske += "." + Convert.ToString(NeueSubnetzmaskeRest);
+                        NeueSubnetzmaskeRest = 0;
+                        Schleife = false;
+                    }
+                    else if (WelchesOktett == j)
+                    {
+                        for (int k = 0; k < Restwert; k++)
+                        {
+                            NeueSubnetzmaskeRest += BitsOktett[k]; 
+                        }
+                        NeueSubnetzmaske += "." + Convert.ToString(NeueSubnetzmaskeRest);
+                        NeueSubnetzmaskeRest = 0;
+                    }
+                    else
+                    {
+                        NeueSubnetzmaske += ".0";
+                        NeueSubnetzmaskeRest = 0;
+                    }
+                }
                 if (AdressOktettenPräfix[4] < Präfix[i])
                 {
                     if (i < AnzahlHosts.Length)
                     {
-                        Console.WriteLine($"{NetzwerkNamen[i]} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
+                        Console.WriteLine($"{NetzwerkNamen[i]} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]} Subnetzmaske: {NeueSubnetzmaske}");
+                        NeueSubnetzmaske = "255";
                     }
                     else
                     {
-                        Console.WriteLine($"Verbindungsnetzwerk {VB} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]}");
+                        Console.WriteLine($"Verbindungsnetzwerk {VB} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]} Subnetzmaske: {NeueSubnetzmaske}");
+                        NeueSubnetzmaske = "255";
                         VB++;
                     }
                     if (Restwert == 0)
