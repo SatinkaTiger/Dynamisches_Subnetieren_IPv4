@@ -239,7 +239,7 @@
         }
         static void ProgrammKopf() //Progammkopf
         {
-            Console.WriteLine("Dynamisches Subnettieren in IPv4\n\nCopyright (C) 2023  Rick Kummer\n");
+            Console.WriteLine("Dynamisches Subnettieren IPv4\r\nCopyright (C) 2023  Rick Kummer\r\n\r\nThis program is free software; you can redistribute it and/or modify\r\nit under the terms of the GNU General Public License as published by\r\nthe Free Software Foundation; either version 2 of the License, or\r\n(at your option) any later version.\r\n\r\nThis program is distributed in the hope that it will be useful,\r\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\r\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\r\nGNU General Public License for more details.\r\n\r\nYou should have received a copy of the GNU General Public License along\r\nwith this program; if not, write to the Free Software Foundation, Inc.,\r\n51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n\n");
         }
         static int PräfixErmitteln(int AnzahlHosts) //Präfix Funktion
             {
