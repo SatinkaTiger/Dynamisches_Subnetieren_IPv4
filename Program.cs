@@ -239,7 +239,7 @@
         }
         static void ProgrammKopf() //Progammkopf
         {
-            Console.WriteLine("Dynamisches Subnettieren in IPv4\n\nopen source\n");
+            Console.WriteLine("Dynamisches Subnettieren in IPv4\n\nCopyright (C) 2023  Rick Kummer\n");
         }
         static int PräfixErmitteln(int AnzahlHosts) //Präfix Funktion
             {
