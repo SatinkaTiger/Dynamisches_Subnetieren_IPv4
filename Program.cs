@@ -36,7 +36,7 @@
             bool Schleife = true;
             int OktettIndex = 0;
             ProgrammKopf(); //Beginn der Eingabeaufforderung
-            Console.Write("Bitte geben Sie die Startadresse mit Präfix Ihres Netzwerks ein: "); 
+            Console.Write("Bitte geben Sie die Startadresse mit Präfix [x.x.x.x/x] Ihres Netzwerks ein: "); 
             Eingabe = Console.ReadLine();
             Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
             Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
