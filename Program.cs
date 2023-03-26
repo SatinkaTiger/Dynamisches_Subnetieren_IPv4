@@ -116,7 +116,6 @@
             Restwert = AdressOktettenPräfix[4] % 8;
             string UrsprünglicheSubnetzmaske = "255";
             int RestwertSubnetzmaske = 0;
-            int Zähler = 0;
             Schleife = true;
             int OktettenSubnetzmaske = WelchesOktett;
             for (int i = 1; i < 4; i++)
