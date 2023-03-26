@@ -112,7 +112,7 @@
                     Präfix[i] = PräfixErmitteln(2);
                 }
             }
-            WelchesOktett = AdressOktettenPräfix[4] / 8;
+            WelchesOktett = AdressOktettenPräfix[4] / 8; //Ermittlung der ursprünglichen Subnetzmaske
             Restwert = AdressOktettenPräfix[4] % 8;
             string UrsprünglicheSubnetzmaske = "255";
             int RestwertSubnetzmaske = 0;
@@ -148,7 +148,7 @@
                 Schleife = true;
                 WelchesOktett = Präfix[i] / 8;
                 Restwert = Präfix[i] % 8;
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < 4; j++) //Ermittlung neuer Subnetzmaske für Teilnetzwerk
                 {
                     if (j < WelchesOktett)
                     {
@@ -181,9 +181,9 @@
                         NeueSubnetzmaskeRest = 0;
                     }
                 }
-                if (AdressOktettenPräfix[4] < Präfix[i])
+                if (AdressOktettenPräfix[4] <= Präfix[i]) 
                 {
-                    if (i < AnzahlHosts.Length)
+                    if (i < AnzahlHosts.Length) //Ausgabe der Ergebnisse
                     {
                         Console.WriteLine($"{NetzwerkNamen[i]} Adresse: {AdressOktettenPräfix[0]}.{AdressOktettenPräfix[1]}.{AdressOktettenPräfix[2]}.{AdressOktettenPräfix[3]}/{Präfix[i]} Subnetzmaske: {NeueSubnetzmaske}");
                         NeueSubnetzmaske = "255";
@@ -194,7 +194,7 @@
                         NeueSubnetzmaske = "255";
                         VB++;
                     }
-                    if (Restwert == 0)
+                    if (Restwert == 0) //Ermittlung neuer Netzadressen
                     {
                         AdressOktettenPräfix[WelchesOktett - 1] += 1;
                     }
@@ -217,7 +217,7 @@
                         }
                     }
                 }
-                else
+                else //Fehlerbehandlung bei fehlerhaftem Präfix
                 {
                     if (i < NetzwerkNamen.Length)
                     {
