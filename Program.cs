@@ -84,9 +84,17 @@
                     }
                     else
                     {
-                        Temp += Eingabe[i];
+                        if (Temp.Length < 3)
+                        {
+                            Temp += Eingabe[i];
+                        }
+                        else
+                        {
+                            Fehlerbehandlung();
+                        }
+                        
                     }
-                    if (OktettIndex == 4 && i == Eingabe.Length - 1)
+                    if ((OktettIndex == 4 && i == Eingabe.Length - 1) && Temp.Length <= 2)
                     {
                         try
                         {
