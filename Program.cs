@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Media;
 
     internal class Program
     {
@@ -252,6 +253,8 @@
         }
         static void Fehlerbehandlung() //Fehlerbehandlung
         {
+            SoundPlayer Sound = new SoundPlayer("Computer sagt nein.wav");
+            Sound.Play();
             Console.WriteLine("Fehlerhafte Eingabe\n\nBeenden mit beliebiger Taste");
             Console.ReadKey();
             Environment.Exit(0);
