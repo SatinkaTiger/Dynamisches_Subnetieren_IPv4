@@ -254,7 +254,14 @@
         static void Fehlerbehandlung() //Fehlerbehandlung
         {
             SoundPlayer Sound = new SoundPlayer("Computer sagt nein.wav");
-            Sound.Play();
+            try
+            {
+                Sound.Play();
+            }
+            catch
+            {
+
+            }
             Console.WriteLine("Fehlerhafte Eingabe\n\nBeenden mit beliebiger Taste");
             Console.ReadKey();
             Environment.Exit(0);
