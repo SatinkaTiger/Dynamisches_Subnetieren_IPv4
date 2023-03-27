@@ -262,6 +262,8 @@
             {
 
             }
+            Console.Clear();
+            ProgrammKopf();
             Console.WriteLine("Fehlerhafte Eingabe\n\nBeenden mit beliebiger Taste");
             Console.ReadKey();
             Environment.Exit(0);
