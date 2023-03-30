@@ -30,74 +30,100 @@
               with this program; if not, write to the Free Software Foundation, Inc.,
               51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
-            int AnzahlNetzwerke; //Variablendeklaration
-            string Eingabe;
+            int AnzahlNetzwerke = 0; //Variablendeklaration
+            string Eingabe = "";
             string Temp = "";
-            bool Converting;
+            bool Converting = false;
             bool Schleife = true;
+            bool SchleifeEingabe = true;
             int OktettIndex = 0;
-            ProgrammKopf(); //Beginn der Eingabeaufforderung
-            Console.Write("Bitte geben Sie die Startadresse mit Präfix [x.x.x.x/x] Ihres Netzwerks ein: "); 
-            Eingabe = Console.ReadLine();
-            Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
-            Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
-            Console.Clear();
-            string[] NetzwerkNamen = new string[AnzahlNetzwerke]; //Arrays erzeugen anhand der Anzahl der Teilnetzwerke
-            int[] AnzahlHosts = new int[AnzahlNetzwerke];
             int[] AdressOktettenPräfix = new int[5];
-            if (Converting) //Früfung auf Richtigkeit der Eingabe der Anzahl der Teilnetzwerke
+            while (SchleifeEingabe)
             {
-                while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
+                ProgrammKopf(); //Beginn der Eingabeaufforderung
+                Console.Write("Bitte geben Sie die Startadresse mit Präfix [x.x.x.x/x] Ihres Netzwerks ein: ");
+                Eingabe = Console.ReadLine();
+                Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
+                Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
+                Console.Clear();
+                Schleife = true;
+                if (Converting)
                 {
-                    for (int i = 0; i < Eingabe.Length; i++)
+                    while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
                     {
-                        if (Eingabe[i] == '.' || Eingabe[i] == '/')   
+                        for (int i = 0; i < Eingabe.Length; i++)
                         {
-                            try
+                            if (Eingabe[i] == '.' || Eingabe[i] == '/') // Wenn ein Oktett zuende ist dann speichern in AdressOktettenPräfix
                             {
-                                if (Convert.ToInt32(Temp) < 256)
+                                try
                                 {
-                                    AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
-                                    Temp = "";
-                                    OktettIndex++;
+                                    if (Convert.ToInt32(Temp) < 256) // Wenn der Wert in String Temp Integer kleiner ist als 256 dann
+                                    {
+                                        AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp); //Convertiert und Speichert Temp in AdressOktettenPräfix Array
+                                        Temp = ""; //Leeren der Temp Variablen für neues Oktett
+                                        OktettIndex++; 
+                                    }
+                                    else
+                                    {
+                                        Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
+                                        Schleife = false;
+                                        break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                    }
                                 }
-                                else
+                                catch
                                 {
-                                    Fehlerbehandlung(1);
+                                    Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
+                                    Schleife = false;
+                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
                                 }
                             }
-                            catch
+                            else //Wenn in der Oktette
                             {
-                                Fehlerbehandlung(0);
+                                if (Temp.Length < 3) //Wenn die Oktette richtig angegeben ist 
+                                {
+                                    Temp += Eingabe[i]; //Temp um aktuellen Char erweitern
+                                }
+                                else //Wenn sie Oktette zu lang ist
+                                {
+                                    Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
+                                    Schleife = false;
+                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                }
                             }
-                        }
-                        else
-                        {
-                            if (Temp.Length < 3)
+                            if (OktettIndex == 4 && i == Eingabe.Length - 1) //Wenn der Präfix erfasst ist 
                             {
-                                Temp += Eingabe[i];
-                            }
-                            else
-                            {
-                                Fehlerbehandlung(1);
-                            }
-
-                        }
-                        if ((OktettIndex == 4 && i == Eingabe.Length - 1) && Temp.Length <= 2)
-                        {
-                            try
-                            {
-                                AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
-                                Schleife = false;
-                            }
-                            catch
-                            {
-                                Fehlerbehandlung(2);
+                                try
+                                {
+                                    AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp); //Convertiert ind speichert Präfix in 
+                                    Schleife = false; 
+                                    SchleifeEingabe = false; //Beenden beider Schleifen
+                                }
+                                catch
+                                {
+                                    Fehlerbehandlung(2); //Präfix falsch angegeben Bchstaben in der Eingabe
+                                    Schleife = false;
+                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                }
+                                if (AdressOktettenPräfix[4] > 32) //Präfix falsch angegeben ungültiger Präfix (zu groß)
+                                {
+                                    Fehlerbehandlung(2); //Präfix falsch angegeben Bchstaben in der Eingabe
+                                    Schleife = false;
+                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                }
                             }
                         }
                     }
-
                 }
+                else
+                {
+                    Fehlerbehandlung(0); //Anzah der Teilnetzwerke falsch (Buchstaben verwendet)
+                }
+            }  
+            string[] NetzwerkNamen = new string[AnzahlNetzwerke]; //Arrays erzeugen anhand der Anzahl der Teilnetzwerke
+            int[] AnzahlHosts = new int[AnzahlNetzwerke];
+            Schleife = true;
+            while (Schleife)
+            {
                 for (int i = 0; i < AnzahlNetzwerke; i++) //Abfrage der Namen der Teilnetzwerke und deren Hostanzahl
                 {
                     ProgrammKopf();
@@ -106,15 +132,14 @@
                     Console.Write($"Bitte geben Sie die Anzahl Ihrer Hosts in {NetzwerkNamen[i]} ein: ");
                     Converting = int.TryParse(Console.ReadLine(), out AnzahlHosts[i]);
                     Console.Clear();
+                    Schleife = false;
                     if (!Converting) //Prüfung auf Richtigkeit der Eingabe
                     {
-                        Fehlerbehandlung(0);
+                        Schleife = true;
+                        Fehlerbehandlung(4); //Anzahl der Hosts falsch angegeben (Buchstaben verwendet)
+                        i--;
                     }
                 }
-            }
-            else
-            {
-                Fehlerbehandlung(0);
             }
             for (int i = 0; i < AnzahlHosts.Length; i++) //Sortierung der Arrays Netzwernamen und AnzahHosts nach Hostanzahl
             {
@@ -261,14 +286,14 @@
                     {
                         Console.WriteLine($"Verbindungsnetzwerk {VB} liegt außerhalb des angegebenen Netzbereiches");
                     }
-                    Fehlerbehandlung(3);
+                    Fehlerbehandlung(3); //Anzahl Hosts zu groß
                 }
             }
             Console.ReadKey();
         }
         static void Fehlerbehandlung(int Index) //Fehlerbehandlung
         {
-            string[] Fehlerliste = new string[] { "Buchstaben verwendet", "Startadresse wurde ein Oktett nicht korrekt angegeben", "Präfix der Startadresse wurde nicht korrekt angegeben", "Anzahl der Hosts zu groß" };
+            string[] Fehlerliste = new string[] { "Buchstaben verwendet bei der Eingabe der Anzahl der Teilnetzwerke verwendet", "Startadresse wurde nicht korrekt angegeben", "Präfix der Startadresse wurde nicht korrekt angegeben", "Anzahl der Hosts zu groß", "Buchstaben Verwendet bei der Angabe der Anzahl der Hosts" };
             SoundPlayer Sound = new SoundPlayer("Computer sagt nein.wav");
             try
             {
@@ -278,20 +303,13 @@
             {
 
             }
-            if (Index < 3)
+            if (Index < 3 || Index == 4)
             {
                 ProgrammKopf();
-                Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nBeenden mit beliebiger Taste");
-                Console.ReadKey();
-                Environment.Exit(0);
             }
-            else
-            {
-                Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nBeenden mit beliebiger Taste");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-            
+            Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nWeiter mit beliebiger Taste");
+            Console.ReadKey();
+            Console.Clear();
         }
         static void ProgrammKopf() //Progammkopf
         {
