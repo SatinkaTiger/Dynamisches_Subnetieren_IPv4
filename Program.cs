@@ -47,6 +47,57 @@
             int[] AdressOktettenPräfix = new int[5];
             if (Converting) //Früfung auf Richtigkeit der Eingabe der Anzahl der Teilnetzwerke
             {
+                while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
+                {
+                    for (int i = 0; i < Eingabe.Length; i++)
+                    {
+                        if (Eingabe[i] == '.' || Eingabe[i] == '/')   
+                        {
+                            try
+                            {
+                                if (Convert.ToInt32(Temp) < 256)
+                                {
+                                    AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
+                                    Temp = "";
+                                    OktettIndex++;
+                                }
+                                else
+                                {
+                                    Fehlerbehandlung(1);
+                                }
+                            }
+                            catch
+                            {
+                                Fehlerbehandlung(0);
+                            }
+                        }
+                        else
+                        {
+                            if (Temp.Length < 3)
+                            {
+                                Temp += Eingabe[i];
+                            }
+                            else
+                            {
+                                Fehlerbehandlung(1);
+                            }
+
+                        }
+                        if ((OktettIndex == 4 && i == Eingabe.Length - 1) && Temp.Length <= 2)
+                        {
+                            try
+                            {
+                                AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
+                                Schleife = false;
+                            }
+                            catch
+                            {
+                                Fehlerbehandlung(2);
+                            }
+                        }
+                    }
+
+                }
                 for (int i = 0; i < AnzahlNetzwerke; i++) //Abfrage der Namen der Teilnetzwerke und deren Hostanzahl
                 {
                     ProgrammKopf();
@@ -57,57 +108,13 @@
                     Console.Clear();
                     if (!Converting) //Prüfung auf Richtigkeit der Eingabe
                     {
-                        Fehlerbehandlung();
+                        Fehlerbehandlung(0);
                     }
                 }
             }
             else
             {
-                Fehlerbehandlung();
-            }
-            while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
-            {
-                for (int i = 0; i < Eingabe.Length; i++)
-                {
-                    if (Eingabe[i] == '.' || Eingabe[i] == '/')
-                    {
-                        try
-                        {
-                            AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
-                            Temp = "";
-                            OktettIndex++;
-                        }
-                        catch
-                        {
-                            Fehlerbehandlung();
-                        }
-                    }
-                    else
-                    {
-                        if (Temp.Length < 3)
-                        {
-                            Temp += Eingabe[i];
-                        }
-                        else
-                        {
-                            Fehlerbehandlung();
-                        }
-                        
-                    }
-                    if ((OktettIndex == 4 && i == Eingabe.Length - 1) && Temp.Length <= 2)
-                    {
-                        try
-                        {
-                            AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp);
-                            Schleife = false;
-                        }
-                        catch
-                        {
-                            Fehlerbehandlung();
-                        }
-                    }
-                }
-
+                Fehlerbehandlung(0);
             }
             for (int i = 0; i < AnzahlHosts.Length; i++) //Sortierung der Arrays Netzwernamen und AnzahHosts nach Hostanzahl
             {
@@ -254,13 +261,14 @@
                     {
                         Console.WriteLine($"Verbindungsnetzwerk {VB} liegt außerhalb des angegebenen Netzbereiches");
                     }
-                    Fehlerbehandlung();
+                    Fehlerbehandlung(3);
                 }
             }
             Console.ReadKey();
         }
-        static void Fehlerbehandlung() //Fehlerbehandlung
+        static void Fehlerbehandlung(int Index) //Fehlerbehandlung
         {
+            string[] Fehlerliste = new string[] { "Buchstaben verwendet", "Startadresse wurde ein Oktett nicht korrekt angegeben", "Präfix der Startadresse wurde nicht korrekt angegeben", "Anzahl der Hosts zu groß" };
             SoundPlayer Sound = new SoundPlayer("Computer sagt nein.wav");
             try
             {
@@ -270,11 +278,20 @@
             {
 
             }
-            Console.Clear();
-            ProgrammKopf();
-            Console.WriteLine("Fehlerhafte Eingabe\n\nBeenden mit beliebiger Taste");
-            Console.ReadKey();
-            Environment.Exit(0);
+            if (Index < 3)
+            {
+                ProgrammKopf();
+                Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nBeenden mit beliebiger Taste");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nBeenden mit beliebiger Taste");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            
         }
         static void ProgrammKopf() //Progammkopf
         {
