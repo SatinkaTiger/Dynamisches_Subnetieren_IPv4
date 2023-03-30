@@ -263,7 +263,15 @@
                         {
                             if ((AdressOktettenPräfix[WelchesOktett - 1] += +1) >= 256)
                             {
-                                AdressOktettenPräfix[WelchesOktett - 2] += 1;
+                                if ((AdressOktettenPräfix[WelchesOktett - 2] += 1) >= 256)
+                                {
+                                    Fehlerbehandlung(30);
+                                }
+                                else
+                                {
+                                    AdressOktettenPräfix[WelchesOktett - 2] += 1;
+                                }
+
                             }
                             else
                             {
