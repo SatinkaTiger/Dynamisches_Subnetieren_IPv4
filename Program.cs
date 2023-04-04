@@ -42,7 +42,7 @@
             {
                 ProgrammKopf(); //Beginn der Eingabeaufforderung
                 Console.Write("Bitte geben Sie die Startadresse mit Präfix [x.x.x.x/x] Ihres Netzwerks ein: ");
-                Eingabe = Console.ReadLine();
+                Eingabe = Console.ReadLine().Trim();
                 Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
                 Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
                 Console.Clear();
