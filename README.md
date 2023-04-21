@@ -35,4 +35,4 @@ If you would like to contribute to this project, please fork the repository and 
 
 ## License
 
-This program is licensed under the MIT License. You are free to use, modify, and distribute the program as you see fit. Please see the LICENSE file for more information.
+This program is licensed under the GNU General Public License v2.0. You are free to use, modify, and distribute the program as you see fit. Please see the LICENSE file for more information.
