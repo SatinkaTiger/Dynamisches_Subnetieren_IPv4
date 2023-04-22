@@ -25,7 +25,7 @@ To use this program, you must have Microsoft Visual Studio installed on your com
 
 To use the program, follow these steps:
 
-1. Enter an IP address and präfix in the provided input fields.
+1. Enter an IP address and präfix.
 2. Enter the number of networks to generate the list of subnets and hosts.
 3. Use the results to configure your network.
 
