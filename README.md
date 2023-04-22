@@ -16,7 +16,7 @@ This is a C# program that can dynamically calculate subnets for a given IP addre
 
 To use this program, you must have Microsoft Visual Studio installed on your computer. Once you have installed Visual Studio, you can download the program from GitHub by following these steps:
 
-1. Go to the [GitHub repository](https://github.com/yourusername/subnet-calculator) for the program.
+1. Go to the [GitHub repository](https://github.com/SatinkaTiger/Dynamisches_Subnettieren_IPv4) for the program.
 2. Click on the "Clone or download" button and select "Download ZIP".
 3. Extract the ZIP file to a directory of your choice.
 4. Open the project in Visual Studio and run the program.
