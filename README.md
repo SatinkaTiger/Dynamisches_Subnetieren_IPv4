@@ -27,7 +27,7 @@ To use the program, follow these steps:
 
 1. Enter an IP address and präfix.
 2. Enter the number of networks.
-3. Enter the name and number of hosts.
+3. Enter the name of network and number of hosts.
 3. Use the results to configure your network.
 
 ## Contributing
