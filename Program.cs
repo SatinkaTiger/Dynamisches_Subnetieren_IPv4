@@ -1,10 +1,6 @@
 ﻿namespace Dynamisches_Subnettieren_IPv4
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Media;
 
     internal class Program
@@ -31,10 +27,10 @@
               51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
             int AnzahlNetzwerke = 0; //Variablendeklaration
-            string Eingabe = "";
+            string Eingabe;
             string Temp = "";
-            bool Converting = false;
-            bool Schleife = true;
+            bool Converting;
+            bool ProzessSchleife;
             bool SchleifeEingabe = true;
             int OktettIndex = 0;
             int[] AdressOktettenPräfix = new int[5];
@@ -46,35 +42,27 @@
                 Console.Write("\nBitte geben Sie die Anzahl ihrer Teilnetzwerke ein: ");
                 Converting = int.TryParse(Console.ReadLine(), out AnzahlNetzwerke);
                 Console.Clear();
-                Schleife = true;
                 if (Converting)
                 {
-                    while (Schleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
+                    ProzessSchleife = true;
+                    while (ProzessSchleife) //Einpflegen der Startadresse in Array AdressOktettenPräfix
                     {
                         for (int i = 0; i < Eingabe.Length; i++)
                         {
+
                             if (Eingabe[i] == '.' || Eingabe[i] == '/') // Wenn ein Oktett zuende ist dann speichern in AdressOktettenPräfix
                             {
                                 try
                                 {
                                     if (Convert.ToInt32(Temp) < 256) // Wenn der Wert in String Temp Integer kleiner ist als 256 dann
                                     {
-                                        AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp); //Convertiert und Speichert Temp in AdressOktettenPräfix Array
-                                        Temp = ""; //Leeren der Temp Variablen für neues Oktett
-                                        OktettIndex++; 
-                                    }
-                                    else
-                                    {
-                                        Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
-                                        Schleife = false;
-                                        break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                        AdressOktettenPräfix[OktettIndex] = OktettEintragen(Temp, AdressOktettenPräfix[OktettIndex], out Temp, OktettIndex, out OktettIndex);
                                     }
                                 }
                                 catch
                                 {
-                                    Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
-                                    Schleife = false;
-                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                    FehlerAusgabe(ProzessSchleife, 1);
+                                    break;
                                 }
                             }
                             else //Wenn in der Oktette
@@ -85,30 +73,24 @@
                                 }
                                 else //Wenn sie Oktette zu lang ist
                                 {
-                                    Fehlerbehandlung(1); //Anfangsadresse wurde falsch angegeben
-                                    Schleife = false;
-                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                    FehlerAusgabe(ProzessSchleife, 1);
                                 }
                             }
                             if (OktettIndex == 4 && i == Eingabe.Length - 1) //Wenn der Präfix erfasst ist 
                             {
                                 try
                                 {
-                                    AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp); //Convertiert ind speichert Präfix in 
-                                    Schleife = false; 
+                                    AdressOktettenPräfix[OktettIndex] = Convert.ToInt32(Temp); //Convertiert int speichert Präfix in 
+                                    ProzessSchleife = false;
                                     SchleifeEingabe = false; //Beenden beider Schleifen
                                 }
                                 catch
                                 {
-                                    Fehlerbehandlung(2); //Präfix falsch angegeben Bchstaben in der Eingabe
-                                    Schleife = false;
-                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                    FehlerAusgabe(ProzessSchleife, 2);
                                 }
                                 if (AdressOktettenPräfix[4] > 32) //Präfix falsch angegeben ungültiger Präfix (zu groß)
                                 {
-                                    Fehlerbehandlung(2); //Präfix falsch angegeben Bchstaben in der Eingabe
-                                    Schleife = false;
-                                    break; //Beenden der Schleifen zum einpflehen Der Startadresse in Array AdressOktettenPräfix
+                                    FehlerAusgabe(ProzessSchleife, 2);
                                 }
                             }
                         }
@@ -118,11 +100,11 @@
                 {
                     Fehlerbehandlung(0); //Anzah der Teilnetzwerke falsch (Buchstaben verwendet)
                 }
-            }  
+            }
             string[] NetzwerkNamen = new string[AnzahlNetzwerke]; //Arrays erzeugen anhand der Anzahl der Teilnetzwerke
             int[] AnzahlHosts = new int[AnzahlNetzwerke];
-            Schleife = true;
-            while (Schleife)
+            SchleifeEingabe = true;
+            while (SchleifeEingabe)
             {
                 for (int i = 0; i < AnzahlNetzwerke; i++) //Abfrage der Namen der Teilnetzwerke und deren Hostanzahl
                 {
@@ -132,10 +114,10 @@
                     Console.Write($"Bitte geben Sie die Anzahl Ihrer Hosts in {NetzwerkNamen[i]} ein: ");
                     Converting = int.TryParse(Console.ReadLine(), out AnzahlHosts[i]);
                     Console.Clear();
-                    Schleife = false;
+                    SchleifeEingabe = false;
                     if (!Converting) //Prüfung auf Richtigkeit der Eingabe
                     {
-                        Schleife = true;
+                        SchleifeEingabe = true;
                         Fehlerbehandlung(4); //Anzahl der Hosts falsch angegeben (Buchstaben verwendet)
                         i--;
                     }
@@ -157,7 +139,7 @@
                 }
             }
             AnzahlNetzwerke += AnzahlNetzwerke - 1; //Berechnung der Verbindungsnetzwerke
-            int[] BitsOktett = new int[] { 128, 64, 32, 16, 8, 4, 2 , 1,};
+            int[] BitsOktett = new int[] { 128, 64, 32, 16, 8, 4, 2, 1, };
             int WelchesOktett;
             int Restwert;
             int[] Präfix = new int[AnzahlNetzwerke];
@@ -176,7 +158,7 @@
             Restwert = AdressOktettenPräfix[4] % 8;
             string UrsprünglicheSubnetzmaske = "255";
             int RestwertSubnetzmaske = 0;
-            Schleife = true;
+            ProzessSchleife = true;
             int OktettenSubnetzmaske = WelchesOktett;
             for (int i = 1; i < 4; i++)
             {
@@ -184,14 +166,14 @@
                 {
                     UrsprünglicheSubnetzmaske += ".255";
                 }
-                else if (Schleife)
+                else if (ProzessSchleife)
                 {
                     for (int j = 0; j < Restwert; j++)
                     {
                         RestwertSubnetzmaske += BitsOktett[j];
                     }
                     UrsprünglicheSubnetzmaske += "." + Convert.ToString(RestwertSubnetzmaske);
-                    Schleife = false;
+                    ProzessSchleife = false;
                 }
                 else
                 {
@@ -204,7 +186,7 @@
             int NeueSubnetzmaskeRest = 0;
             for (int i = 0; i < AnzahlNetzwerke; i++) //Verarbeiten und Ausgeben der Daten
             {
-                Schleife = true;
+                ProzessSchleife = true;
                 WelchesOktett = Präfix[i] / 8;
                 Restwert = Präfix[i] % 8;
                 for (int j = 1; j < 4; j++) //Ermittlung neuer Subnetzmaske für Teilnetzwerk
@@ -229,7 +211,7 @@
                     {
                         for (int k = 0; k < Restwert; k++)
                         {
-                            NeueSubnetzmaskeRest += BitsOktett[k]; 
+                            NeueSubnetzmaskeRest += BitsOktett[k];
                         }
                         NeueSubnetzmaske += "." + Convert.ToString(NeueSubnetzmaskeRest);
                         NeueSubnetzmaskeRest = 0;
@@ -240,7 +222,7 @@
                         NeueSubnetzmaskeRest = 0;
                     }
                 }
-                if (AdressOktettenPräfix[4] <= Präfix[i]) 
+                if (AdressOktettenPräfix[4] <= Präfix[i])
                 {
                     if (i < AnzahlHosts.Length) //Ausgabe der Ergebnisse
                     {
@@ -311,10 +293,7 @@
             {
 
             }
-            if (Index < 3 || Index == 4)
-            {
-                ProgrammKopf();
-            }
+            ProgrammKopf();
             Console.WriteLine($"Es ist ein Fehler aufgetreten: {Fehlerliste[Index]}\n\nWeiter mit beliebiger Taste");
             Console.ReadKey();
             Console.Clear();
@@ -324,10 +303,10 @@
             Console.WriteLine("Dynamisches Subnettieren IPv4\r\nCopyright (C) 2023  Rick Kummer\r\n");
         }
         static int PräfixErmitteln(int AnzahlHosts) //Präfix Funktion
-            {
+        {
             int Präfix = 0;
             bool Gefunden = false;
-            for (int j = 0 ; j <= 32; j++)
+            for (int j = 0; j <= 32; j++)
             {
                 if (Math.Pow(2, Convert.ToDouble(j)) >= Convert.ToDouble(AnzahlHosts + 2) && !Gefunden)
                 {
@@ -336,6 +315,22 @@
                 }
             }
             return Präfix;
+        }
+        static bool FehlerAusgabe(bool Schleifen, int i)
+        {
+            Fehlerbehandlung(i); //Anfangsadresse wurde falsch angegeben
+            return false;
+        }
+        static int OktettEintragen(string Oktett, int AdressOktettenPräfix, out string OktettOutput,int OktettIndex, out int OktettIndexOutput)
+        {
+            AdressOktettenPräfix = Convert.ToInt32(Oktett); //Convertiert und Speichert Temp in AdressOktettenPräfix Array
+            OktettOutput = ""; //Leeren der Temp Variablen für neues Oktett
+            OktettIndexOutput = OktettIndex + 1;
+            return AdressOktettenPräfix;
+        }
+        static bool TeilnetzwerkEingabe()
+        {
+            return false;
         }
     }
 }
